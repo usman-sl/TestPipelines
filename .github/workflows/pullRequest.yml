@@ -39,7 +39,9 @@ jobs:
             -configuration Release \
             -archivePath ${{ github.workspace }}/TestPipelines.xcarchive \
             -destination 'generic/platform=iOS Simulator' archive
-
+      - name: Move archive to repo root
+        run: |
+            mv "/Users/runner/Library/Developer/Xcode/Archives/$(date +'%Y-%m-%d')/TestPipelines.xcarchive" "$GITHUB_WORKSPACE/"
     #   - name: Export IPA
     #     run: |
     #       xcodebuild -exportArchive \
@@ -52,17 +54,3 @@ jobs:
     #     with:
     #       name: IPA
     #       path: ./TestPipelines/build/*.ipa
-
-## For Simulators
-#   - name: Build for Simulator
-#     run: |
-#       xcodebuild build -project TestPipelines.xcodeproj \
-#         -scheme TestPipelines \
-#         -destination 'platform=iOS Simulator,name=iPhone 15' \
-#         -configuration Debug | xcpretty
-    
-#     - name: Saving Build Logs
-#       uses: actions/upload-artifact@v2   
-#       with:
-#         name: build-logs
-#         path: ./TestPipelines/build
