@@ -3,7 +3,7 @@ name: TestPipelines
 on: 
   push:
     branches:    
-      - beta
+      - main
 
 jobs:
   deploy:
