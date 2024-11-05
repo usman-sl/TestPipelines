@@ -37,7 +37,7 @@ jobs:
           xcodebuild archive -project TestPipelines.xcodeproj \
             -scheme TestPipelines \
             -configuration Release \
-            -archivePath ${{ github.workspace }}/TestPipelines.xcarchive \
+            -archivePath "$GITHUB_WORKSPACE/TestPipelines.xcarchive" archive
             -destination 'generic/platform=iOS Simulator' archive
 
       - name: Verify archive path
