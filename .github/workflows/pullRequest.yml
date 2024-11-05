@@ -1,0 +1,68 @@
+name: TestPipelines 
+
+on: 
+  push:
+    branches:    
+      - beta
+
+jobs:
+  deploy:
+    name: TestPipelines
+    runs-on: macos-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - name: Selecting Xcode Version
+        run: sudo xcode-select -switch /Applications/Xcode_15.4.app
+        
+      - name: Running Xcode Version
+        run: /usr/bin/xcodebuild -version
+
+      # Uncomment if you want to install CocoaPods
+      # - name: Install CocoaPods
+      #   run: |
+      #     sudo gem install cocoapods
+      #     cd CI-CD-Demo.xcworkspace
+      #     pod install
+
+      - name: Build Cleanup
+        run: |
+          cd TestPipelines
+          xcodebuild clean -project TestPipelines.xcodeproj -scheme TestPipelines | xcpretty
+          
+      - name: Archive the App
+        run: |
+          xcodebuild archive -project TestPipelines.xcodeproj \
+            -scheme TestPipelines \
+            -configuration Release \
+            -archivePath ${{ github.workspace }}/TestPipelines.xcarchive \
+            -destination 'generic/platform=iOS Simulator' archive
+
+      - name: Export IPA
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath ${{ github.workspace }}/TestPipelines.xcarchive \
+            -exportPath ${{ github.workspace }}/TestPipelines/build \
+            -exportOptionsPlist TestPipelines/ExportOptions.plist
+
+      - name: Saving IPA File
+        uses: actions/upload-artifact@v3
+        with:
+          name: IPA
+          path: ./TestPipelines/build/*.ipa
+
+## For Simulators
+#   - name: Build for Simulator
+#     run: |
+#       xcodebuild build -project TestPipelines.xcodeproj \
+#         -scheme TestPipelines \
+#         -destination 'platform=iOS Simulator,name=iPhone 15' \
+#         -configuration Debug | xcpretty
+    
+#     - name: Saving Build Logs
+#       uses: actions/upload-artifact@v2   
+#       with:
+#         name: build-logs
+#         path: ./TestPipelines/build
