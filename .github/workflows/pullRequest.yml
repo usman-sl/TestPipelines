@@ -40,18 +40,18 @@ jobs:
             -archivePath ${{ github.workspace }}/TestPipelines.xcarchive \
             -destination 'generic/platform=iOS Simulator' archive
 
-      - name: Export IPA
-        run: |
-          xcodebuild -exportArchive \
-            -archivePath ${{ github.workspace }}/TestPipelines.xcarchive \
-            -exportPath ${{ github.workspace }}/TestPipelines/build \
-            -exportOptionsPlist TestPipelines/ExportOptions.plist
+    #   - name: Export IPA
+    #     run: |
+    #       xcodebuild -exportArchive \
+    #         -archivePath ${{ github.workspace }}/TestPipelines.xcarchive \
+    #         -exportPath ${{ github.workspace }}/TestPipelines/build \
+    #         -exportOptionsPlist TestPipelines/ExportOptions.plist
 
-      - name: Saving IPA File
-        uses: actions/upload-artifact@v3
-        with:
-          name: IPA
-          path: ./TestPipelines/build/*.ipa
+    #   - name: Saving IPA File
+    #     uses: actions/upload-artifact@v3
+    #     with:
+    #       name: IPA
+    #       path: ./TestPipelines/build/*.ipa
 
 ## For Simulators
 #   - name: Build for Simulator
