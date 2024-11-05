@@ -35,9 +35,9 @@ jobs:
       - name: Archive the App
         run: |
           xcodebuild archive -project TestPipelines.xcodeproj \
-            xcodebuild -scheme TestPipelines \
+            -scheme TestPipelines \
             -configuration Release \
-            -archivePath /Users/runner/Library/Developer/Xcode/Archives/TestPipelines.xcarchive archive
+            -archivePath ${{ github.workspace }}/TestPipelines.xcarchive \
             -destination 'generic/platform=iOS Simulator' archive
 
       - name: Verify archive path
@@ -50,9 +50,8 @@ jobs:
               fi
 
     #   - name: Move archive to repo root
-    #      if: success() # Only run if the previous step succeeded
-    # run: |
-    #   mv "/Users/runner/Library/Developer/Xcode/Archives/TestPipelines.xcarchive" "$GITHUB_WORKSPACE/"
+    #     run: |
+    #         mv "/Users/runner/Library/Developer/Xcode/Archives/$(date +'%Y-%m-%d')/TestPipelines.xcarchive" "$GITHUB_WORKSPACE/"
   
 
 
