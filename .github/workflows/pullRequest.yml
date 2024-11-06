@@ -25,6 +25,7 @@ jobs:
           sudo gem install cocoapods
           cd TestPipelines
           pod install
+          export SRCROOT=$PWD
 
       - name: Build Cleanup
         run: |
@@ -32,6 +33,9 @@ jobs:
           xcodebuild clean -workspace TestPipelines.xcworkspace -scheme TestPipelines | xcpretty
           
       - name: Archive the App
+        env:
+          BUILD_DIR: "$GITHUB_WORKSPACE/TestPipelines/build"
+          ACTION: "build"
         run: |
           xcodebuild archive -workspace TestPipelines.xcworkspace \
             -scheme TestPipelines \
