@@ -20,44 +20,38 @@ jobs:
       - name: Running Xcode Version
         run: /usr/bin/xcodebuild -version
 
-      # Uncomment if you want to install CocoaPods
-      # - name: Install CocoaPods
-      #   run: |
-      #     sudo gem install cocoapods
-      #     cd CI-CD-Demo.xcworkspace
-      #     pod install
+      - name: Install CocoaPods
+        run: |
+          sudo gem install cocoapods
+          cd TestPipelines
+          pod install
 
       - name: Build Cleanup
         run: |
           cd TestPipelines
-          xcodebuild clean -project TestPipelines.xcodeproj -scheme TestPipelines | xcpretty
+          xcodebuild clean -workspace TestPipelines.xcworkspace -scheme TestPipelines | xcpretty
           
       - name: Archive the App
         run: |
-          xcodebuild archive -project TestPipelines.xcodeproj \
+          xcodebuild archive -workspace TestPipelines.xcworkspace \
             -scheme TestPipelines \
             -configuration Release \
-            -archivePath "$GITHUB_WORKSPACE/TestPipelines.xcarchive" archive
-            -destination 'generic/platform=iOS Simulator' archive
+            -archivePath "$GITHUB_WORKSPACE/TestPipelines.xcarchive" \
+            -destination 'generic/platform=iOS Simulator'
 
       - name: Verify archive path
         run: |
-              if [ -d "/Users/runner/Library/Developer/Xcode/Archives/TestPipelines.xcarchive" ]; then
-                echo "Archive found!"
-              else
-                echo "Archive not found at expected location."
-                exit 1
-              fi
+          if [ -d "$GITHUB_WORKSPACE/TestPipelines.xcarchive" ]; then
+            echo "Archive found!"
+          else
+            echo "Archive not found at expected location."
+            exit 1
+          fi
 
     #   - name: Move archive to repo root
     #     run: |
     #         mv "/Users/runner/Library/Developer/Xcode/Archives/$(date +'%Y-%m-%d')/TestPipelines.xcarchive" "$GITHUB_WORKSPACE/"
   
-
-
-
-
-
     #   - name: Export IPA
     #     run: |
     #       xcodebuild -exportArchive \
