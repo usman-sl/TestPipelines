@@ -24,13 +24,9 @@ jobs:
         run: |
           sudo gem install cocoapods
           cd TestPipelines
+          pod deintegrate
           pod install
-          export SRCROOT=$PWD
-          # Disable error for unset variables temporarily
-          set +u
-          source "$SRCROOT/Pods/Target Support Files/Pods-TestPipelines/Pods-TestPipelines-frameworks.sh"
-          # Re-enable error for unset variables
-          set -u
+
       
       - name: Build Cleanup
         run: |
