@@ -28,7 +28,6 @@ jobs:
       
       - name: Build Cleanup
         run: |
-          cd TestPipelines
           xcodebuild clean -workspace TestPipelines.xcworkspace -scheme TestPipelines | xcpretty
         
       # - name: Verify directory and Run Unit Tests
