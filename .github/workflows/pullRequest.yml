@@ -23,7 +23,6 @@ jobs:
       - name: Install CocoaPods
         run: |
           sudo gem install cocoapods
-          cd TestPipelines
           pod install
 
       - name: List files in root directory
