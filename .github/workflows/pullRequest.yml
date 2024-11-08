@@ -25,7 +25,25 @@ jobs:
           sudo gem install cocoapods
           cd TestPipelines
           pod install
-      
+
+      - name: List files in root directory
+        run: |
+          ls -la
+
+      - name: Open the project or workspace
+        run: |
+          cd TestPipelines
+          if [ -f "TestPipelines.xcworkspace" ]; then
+            echo "Opening TestPipelines.xcworkspace"
+            open TestPipelines.xcworkspace
+          elif [ -f "TestPipelines.xcodeproj" ]; then
+            echo "Opening TestPipelines.xcodeproj"
+            open TestPipelines.xcodeproj
+          else
+            echo "No .xcworkspace or .xcodeproj found."
+            exit 1
+          fi
+     
       - name: Run Unit Tests
         run: |
           cd TestPipelines
