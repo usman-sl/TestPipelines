@@ -38,7 +38,7 @@ jobs:
             -scheme TestPipelines \
             -destination 'platform=iOS Simulator,name=iPhone 14' \
             -only-testing:TestPipelinesTests
-
+            -allowProvisioningUpdates
 
           else
             echo ".xcworkspace file not found for testing."
