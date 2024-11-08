@@ -34,8 +34,12 @@ jobs:
       - name: Running the Unit Tests
         run: |
          echo "Verifying the presence of .xcworkspace file"
-            xcodebuild test --workspace TestPipelines.xcworkspace \
-              -scheme TestPipelines \
+            xcodebuild test -workspace TestPipelines.xcworkspace \
+            -scheme TestPipelines \
+            -destination 'platform=iOS Simulator,name=iPhone 14' \
+            -only-testing:TestPipelinesTests
+
+
           else
             echo ".xcworkspace file not found for testing."
             exit 1
