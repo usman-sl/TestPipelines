@@ -26,18 +26,6 @@ jobs:
           cd TestPipelines
           pod install
       
-      - name: Build Cleanup
-        run: |
-         cd TestPipelines
-          if [ -f "TestPipelines.xcworkspace" ]; then
-            xcodebuild clean -workspace TestPipelines.xcworkspace -scheme TestPipelines | xcpretty
-          elif [ -f "TestPipelines.xcodeproj" ]; then
-            xcodebuild clean -project TestPipelines.xcodeproj -scheme TestPipelines | xcpretty
-          else
-            echo "Neither .xcworkspace nor .xcodeproj found."
-            exit 1
-          fi
-          
       - name: Run Unit Tests
         run: |
           cd TestPipelines
