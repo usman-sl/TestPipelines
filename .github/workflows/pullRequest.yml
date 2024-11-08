@@ -43,9 +43,7 @@ jobs:
       - name: Verify directory and Run Unit Tests
         run: |
          echo "Verifying the presence of .xcworkspace file"
-
-          # Check if the xcworkspace file exists
-          if [ -f "TestPipelines/TestPipelines.xcworkspace" ]; then
+          if [ -f "TestPipelines.xcworkspace" ]; then
             echo "Found .xcworkspace file, running tests"
             xcodebuild test -workspace TestPipelines/TestPipelines.xcworkspace \
               -scheme TestPipelines \
