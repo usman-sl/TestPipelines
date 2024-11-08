@@ -1,4 +1,4 @@
-name: TestPipelines 
+name: TestPipelines
 
 on: 
   push:
@@ -23,11 +23,21 @@ jobs:
       - name: Install CocoaPods
         run: |
           sudo gem install cocoapods
-          pod install
-
-      - name: List files in root directory
-        run: |
+          # List files before pod install to verify the state of the directory
+          echo "Before pod install"
           ls -la
+          # Install Pods
+          pod install
+          # List files after pod install to ensure Pods directory is created
+          echo "After pod install"
+          ls -la
+          # Verify if Pods directory exists
+          if [ -d "Pods" ]; then
+            echo "Pods directory exists."
+          else
+            echo "Pods directory does not exist. Something went wrong with pod install."
+            exit 1
+          fi
 
       - name: Run Unit Tests
         continue-on-error: false  # Fail the workflow if tests fail
