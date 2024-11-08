@@ -24,26 +24,17 @@ jobs:
         run: |
           sudo gem install cocoapods
           cd TestPipelines
-          pod install --verbose
-
-      - name: Verify .xcworkspace Existence
-        run: |
-          if [ -f "TestPipelines/TestPipelines.xcworkspace" ]; then
-            echo "TestPipelines.xcworkspace exists."
-          else
-            echo "TestPipelines.xcworkspace does not exist."
-            exit 1
-          fi
+          pod install --verbose  # This will still install dependencies, even if .xcworkspace is not used
 
       - name: Build Cleanup
         run: |
           cd TestPipelines
-          xcodebuild clean -workspace TestPipelines.xcworkspace -scheme TestPipelines | xcpretty
+          xcodebuild clean -project TestPipelines.xcodeproj -scheme TestPipelines | xcpretty
 
       - name: Run Unit Tests
         run: |
           cd TestPipelines
-          xcodebuild test -workspace TestPipelines.xcworkspace \
+          xcodebuild test -project TestPipelines.xcodeproj \
             -scheme TestPipelines \
             -destination 'platform=iOS Simulator,name=iPhone 14' | xcpretty
         continue-on-error: false  # Fail the workflow if tests fail
@@ -55,7 +46,7 @@ jobs:
           ACTION: "build"
         run: |
           cd TestPipelines
-          xcodebuild archive -workspace TestPipelines.xcworkspace \
+          xcodebuild archive -project TestPipelines.xcodeproj \
             -scheme TestPipelines \
             -configuration Release \
             -archivePath "$GITHUB_WORKSPACE/TestPipelines.xcarchive" \
@@ -70,8 +61,3 @@ jobs:
             echo "Archive not found at expected location."
             exit 1
           fi
-
-      - name: Move archive to repo root
-        if: success() # Only run if archive verification succeeded
-        run: |
-          mv "$GITHUB_WORKSPACE/TestPipelines.xcarchive" "$GITHUB_WORKSPACE/"
