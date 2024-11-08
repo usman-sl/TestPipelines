@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		7B590CBC2CDE118500C31FC5 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B590CBB2CDE118500C31FC5 /* LoginViewModel.swift */; };
-		7B590CC02CDE13F900C31FC5 /* LoginViewModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B590CBF2CDE13F900C31FC5 /* LoginViewModelTest.swift */; };
 		7B8DC0882CDA209E00E91177 /* TestPipelinesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8DC0872CDA209E00E91177 /* TestPipelinesApp.swift */; };
 		7B8DC08A2CDA209E00E91177 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8DC0892CDA209E00E91177 /* ContentView.swift */; };
 		7B8DC08C2CDA209E00E91177 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8DC08B2CDA209E00E91177 /* Item.swift */; };
@@ -86,7 +85,6 @@
 		43ACC93D594928C556EFFC3D /* Pods_TestPipelinesTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TestPipelinesTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		46547ADF6CD8A5D793250AF8 /* Pods-TestPipelines.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestPipelines.debug.xcconfig"; path = "Target Support Files/Pods-TestPipelines/Pods-TestPipelines.debug.xcconfig"; sourceTree = "<group>"; };
 		7B590CBB2CDE118500C31FC5 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
-		7B590CBF2CDE13F900C31FC5 /* LoginViewModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModelTest.swift; sourceTree = "<group>"; };
 		7B8DC0842CDA209E00E91177 /* TestPipelines.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestPipelines.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B8DC0872CDA209E00E91177 /* TestPipelinesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPipelinesApp.swift; sourceTree = "<group>"; };
 		7B8DC0892CDA209E00E91177 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -189,7 +187,6 @@
 			isa = PBXGroup;
 			children = (
 				7B8DC09A2CDA20A000E91177 /* TestPipelinesTests.swift */,
-				7B590CBF2CDE13F900C31FC5 /* LoginViewModelTest.swift */,
 			);
 			path = TestPipelinesTests;
 			sourceTree = "<group>";
@@ -443,7 +440,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7B590CC02CDE13F900C31FC5 /* LoginViewModelTest.swift in Sources */,
 				7B8DC09B2CDA20A000E91177 /* TestPipelinesTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
