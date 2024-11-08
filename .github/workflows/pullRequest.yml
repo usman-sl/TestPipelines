@@ -24,7 +24,6 @@ jobs:
         run: |
           sudo gem install cocoapods
           cd TestPipelines
-          pod deintegrate
           pod install
       
       - name: Build Cleanup
