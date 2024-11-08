@@ -37,9 +37,8 @@ jobs:
           xcodebuild test -workspace TestPipelines.xcworkspace \
           -scheme TestPipelines \
           -destination 'platform=iOS Simulator,name=iPhone 14' \
-          -ONLY-testing:TestPipelinesTests \
           CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
-          
+
           else
             echo ".xcworkspace file not found for testing."
             exit 1
