@@ -32,7 +32,6 @@ jobs:
 
       - name: Open the project or workspace
         run: |
-          cd TestPipelines
           if [ -f "TestPipelines.xcworkspace" ]; then
             echo "Opening TestPipelines.xcworkspace"
             open TestPipelines.xcworkspace
@@ -43,10 +42,21 @@ jobs:
             echo "No .xcworkspace or .xcodeproj found."
             exit 1
           fi
-     
-      - name: Run Unit Tests
+
+      - name: Build Cleanup
         run: |
-          cd TestPipelines
+          if [ -f "TestPipelines.xcworkspace" ]; then
+            xcodebuild clean -workspace TestPipelines.xcworkspace -scheme TestPipelines | xcpretty
+          elif [ -f "TestPipelines.xcodeproj" ]; then
+            xcodebuild clean -project TestPipelines.xcodeproj -scheme TestPipelines | xcpretty
+          else
+            echo "Neither .xcworkspace nor .xcodeproj found."
+            exit 1
+          fi
+
+      - name: Run Unit Tests
+        continue-on-error: false  # Fail the workflow if tests fail
+        run: |
           if [ -f "TestPipelines.xcworkspace" ]; then
             xcodebuild test -workspace TestPipelines.xcworkspace \
               -scheme TestPipelines \
@@ -59,14 +69,12 @@ jobs:
             echo "Neither .xcworkspace nor .xcodeproj found for testing."
             exit 1
           fi
-        continue-on-error: false  # Fail the workflow if tests fail     
-          
+
       - name: Archive the App
         env:
           BUILD_DIR: "$GITHUB_WORKSPACE/TestPipelines/build"
           ACTION: "build"
         run: |
-          cd TestPipelines
           if [ -f "TestPipelines.xcworkspace" ]; then
             xcodebuild archive -workspace TestPipelines.xcworkspace \
               -scheme TestPipelines \
@@ -92,4 +100,3 @@ jobs:
             echo "Archive not found at expected location."
             exit 1
           fi
-
