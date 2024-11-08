@@ -42,11 +42,11 @@ jobs:
 
       - name: Verify directory and Run Unit Tests
         run: |
-          # Verify we are in the correct directory
-          cd TestPipelines || { echo "TestPipelines directory not found!"; exit 1; }
-          echo "Listing files in TestPipelines directory"
+          # Verify files in root directory directly
+          echo "Listing files in the root directory"
           ls -la
           
+          # Check for xcworkspace or xcodeproj file in the root directory
           if [ -f "TestPipelines.xcworkspace" ]; then
             echo "Running tests on TestPipelines.xcworkspace"
             xcodebuild test -workspace TestPipelines.xcworkspace \
