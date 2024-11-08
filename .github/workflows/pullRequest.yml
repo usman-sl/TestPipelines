@@ -13,22 +13,40 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        
+
       - name: Selecting Xcode Version
         run: sudo xcode-select -switch /Applications/Xcode_15.4.app
-        
+
       - name: Running Xcode Version
         run: /usr/bin/xcodebuild -version
 
+      # Check if TestPipelines directory exists
+      - name: Verify TestPipelines Directory
+        run: |
+          if [ -d "TestPipelines" ]; then
+            echo "Directory TestPipelines exists."
+          else
+            echo "Directory TestPipelines does not exist."
+            exit 1
+          fi
+
+      # Install CocoaPods dependencies
       - name: Install CocoaPods
         run: |
           sudo gem install cocoapods
           cd TestPipelines
-          pod install
+          if [ -f "Podfile" ]; then
+            echo "Podfile exists. Installing pods..."
+            pod install --verbose
+          else
+            echo "Podfile does not exist in TestPipelines directory."
+            exit 1
+          fi
 
+      # Verify that .xcworkspace was created
       - name: Verify .xcworkspace Existence
         run: |
-          if [ -f "TestPipelines.xcworkspace" ]; then
+          if [ -f "TestPipelines/TestPipelines.xcworkspace" ]; then
             echo "TestPipelines.xcworkspace exists."
           else
             echo "TestPipelines.xcworkspace does not exist."
@@ -40,6 +58,7 @@ jobs:
           cd TestPipelines
           xcodebuild clean -workspace TestPipelines.xcworkspace -scheme TestPipelines | xcpretty
 
+      # Run Unit Tests
       - name: Run Unit Tests
         run: |
           cd TestPipelines
@@ -59,4 +78,19 @@ jobs:
             -scheme TestPipelines \
             -configuration Release \
             -archivePath "$GITHUB_WORKSPACE/TestPipelines.xcarchive" \
-            -destination 'generic/platf
+            -destination 'generic/platform=iOS Simulator'
+
+      - name: Verify archive path
+        if: success() # Only run if archiving succeeded
+        run: |
+          if [ -d "$GITHUB_WORKSPACE/TestPipelines.xcarchive" ]; then
+            echo "Archive found!"
+          else
+            echo "Archive not found at expected location."
+            exit 1
+          fi
+
+      - name: Move archive to repo root
+        if: success() # Only run if archive verification succeeded
+        run: |
+          mv "$GITHUB_WORKSPACE/TestPipelines.xcarchive" "$GITHUB_WORKSPACE/"
