@@ -1,15 +1,15 @@
 name: TestPipelines
 
-on: 
+on:
   push:
-    branches:    
+    branches:
       - main
 
 jobs:
   deploy:
     name: TestPipelines
     runs-on: macos-latest
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -23,15 +23,11 @@ jobs:
       - name: Install CocoaPods
         run: |
           sudo gem install cocoapods
-          # List files before pod install to verify the state of the directory
           echo "Before pod install"
           ls -la
-          # Install Pods
           pod install
-          # List files after pod install to ensure Pods directory is created
           echo "After pod install"
           ls -la
-          # Verify if Pods directory exists
           if [ -d "Pods" ]; then
             echo "Pods directory exists."
           else
@@ -39,17 +35,27 @@ jobs:
             exit 1
           fi
 
-      - name: Run Unit Tests
-        continue-on-error: false  # Fail the workflow if tests fail
+      - name: List files in root directory
         run: |
-          cd TestPipelines  # Make sure we are in the correct directory
+          echo "Listing files in the root directory"
+          ls -la
+
+      - name: Verify directory and Run Unit Tests
+        run: |
+          # Verify we are in the correct directory
+          cd TestPipelines || { echo "TestPipelines directory not found!"; exit 1; }
+          echo "Listing files in TestPipelines directory"
+          ls -la
+          
           if [ -f "TestPipelines.xcworkspace" ]; then
-            # Running the test directly in the correct directory
-            xcodebuild test -scheme TestPipelines \
+            echo "Running tests on TestPipelines.xcworkspace"
+            xcodebuild test -workspace TestPipelines.xcworkspace \
+              -scheme TestPipelines \
               -destination 'platform=iOS Simulator,name=iPhone 14' | xcpretty
           elif [ -f "TestPipelines.xcodeproj" ]; then
-            # Running the test directly in the correct directory
-            xcodebuild test -scheme TestPipelines \
+            echo "Running tests on TestPipelines.xcodeproj"
+            xcodebuild test -project TestPipelines.xcodeproj \
+              -scheme TestPipelines \
               -destination 'platform=iOS Simulator,name=iPhone 14' | xcpretty
           else
             echo "Neither .xcworkspace nor .xcodeproj found for testing."
@@ -85,4 +91,3 @@ jobs:
           else
             echo "Archive not found at expected location."
             exit 1
-          fi
