@@ -6,3 +6,13 @@
 //
 
 import Foundation
+
+class LoginViewModel {
+    
+    func validateUsername(userName: String) -> Bool{
+        if userName.isEmpty || userName.count < 3 {
+            return true
+        }
+        return false
+    }
+}

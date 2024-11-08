@@ -31,6 +31,14 @@ jobs:
           cd TestPipelines
           xcodebuild clean -workspace TestPipelines.xcworkspace -scheme TestPipelines | xcpretty
           
+      - name: Run Unit Tests
+        run: |
+          cd TestPipelines
+          xcodebuild test -workspace TestPipelines.xcworkspace \
+            -scheme TestPipelines \
+            -destination 'platform=iOS Simulator,name=iPhone 14' | xcpretty
+        continue-on-error: false  # Fail the workflow if tests fail     
+          
       - name: Archive the App
         env:
           BUILD_DIR: "$GITHUB_WORKSPACE/TestPipelines/build"
@@ -51,19 +59,7 @@ jobs:
             exit 1
           fi
 
-    #   - name: Move archive to repo root
-    #     run: |
-    #         mv "/Users/runner/Library/Developer/Xcode/Archives/$(date +'%Y-%m-%d')/TestPipelines.xcarchive" "$GITHUB_WORKSPACE/"
+      - name: Move archive to repo root
+        run: |
+            mv "/Users/runner/Libr  ary/Developer/Xcode/Archives/$(date +'%Y-%m-%d')/TestPipelines.xcarchive" "$GITHUB_WORKSPACE/"
   
-    #   - name: Export IPA
-    #     run: |
-    #       xcodebuild -exportArchive \
-    #         -archivePath ${{ github.workspace }}/TestPipelines.xcarchive \
-    #         -exportPath ${{ github.workspace }}/TestPipelines/build \
-    #         -exportOptionsPlist TestPipelines/ExportOptions.plist
-
-    #   - name: Saving IPA File
-    #     uses: actions/upload-artifact@v3
-    #     with:
-    #       name: IPA
-    #       path: ./TestPipelines/build/*.ipa
