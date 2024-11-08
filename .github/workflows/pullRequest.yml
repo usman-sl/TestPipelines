@@ -18,10 +18,7 @@ jobs:
     - name: Clean Build Folder
       run: |
         xcodebuild clean -workspace TestPipelines.xcworkspace -scheme TestPipelines
-
-    - name: Remove Derived Data
-      run: rm -rf ~/Library/Developer/Xcode/DerivedData/*
-
+        
     - name: Reintegrate Pods and Install New One
       run: |
         pod deintegrate
