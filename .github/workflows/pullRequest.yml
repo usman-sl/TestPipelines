@@ -33,10 +33,10 @@ jobs:
         run: |
           if [ -f "TestPipelines.xcworkspace" ]; then
             echo "Opening TestPipelines.xcworkspace"
-            open TestPipelines.xcworkspace
+            TestPipelines.xcworkspace
           elif [ -f "TestPipelines.xcodeproj" ]; then
             echo "Opening TestPipelines.xcodeproj"
-            open TestPipelines.xcodeproj
+            TestPipelines.xcodeproj
           else
             echo "No .xcworkspace or .xcodeproj found."
             exit 1
