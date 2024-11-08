@@ -42,19 +42,17 @@ jobs:
 
       - name: Verify directory and Run Unit Tests
         run: |
-          # Verify files in root directory directly
-          echo "Listing files in the root directory"
-          ls -la
-          
-          # Check for xcworkspace or xcodeproj file in the root directory
-          if [ -f "TestPipelines.xcworkspace" ]; then
-            echo "Running tests on TestPipelines.xcworkspace"
-            xcodebuild test -workspace TestPipelines.xcworkspace \
+          echo "Verifying the presence of .xcworkspace and .xcodeproj files"
+
+          # Check if the xcworkspace or xcodeproj file exists
+          if [ -f "TestPipelines/TestPipelines.xcworkspace" ]; then
+            echo "Found .xcworkspace file, running tests"
+            xcodebuild test -workspace TestPipelines/TestPipelines.xcworkspace \
               -scheme TestPipelines \
               -destination 'platform=iOS Simulator,name=iPhone 14' | xcpretty
-          elif [ -f "TestPipelines.xcodeproj" ]; then
-            echo "Running tests on TestPipelines.xcodeproj"
-            xcodebuild test -project TestPipelines.xcodeproj \
+          elif [ -f "TestPipelines/TestPipelines.xcodeproj" ]; then
+            echo "Found .xcodeproj file, running tests"
+            xcodebuild test -project TestPipelines/TestPipelines.xcodeproj \
               -scheme TestPipelines \
               -destination 'platform=iOS Simulator,name=iPhone 14' | xcpretty
           else
