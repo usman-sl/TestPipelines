@@ -1,56 +1,68 @@
-name: iOS Build and Test
+name: TestPipelines 
 
-on:
+on: 
   push:
-    branches:
+    branches:    
       - main
 
 jobs:
-  build:
+  deploy:
+    name: TestPipelines
     runs-on: macos-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Set up CocoaPods
-      run: sudo gem install cocoapods
-
-    - name: Clean Build Folder
-      run: |
-        xcodebuild clean -workspace TestPipelines.xcworkspace -scheme TestPipelines
-        
-    - name: Reintegrate Pods and Install New One
-      run: |
-        pod deintegrate
-        pod install
     
-    - name: Build the project
-      run: |
-        xcodebuild -workspace TestPipelines.xcworkspace \
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - name: Selecting Xcode Version
+        run: sudo xcode-select -switch /Applications/Xcode_15.4.app
+        
+      - name: Running Xcode Version
+        run: /usr/bin/xcodebuild -version
+
+      - name: Reintegrate Pods and Install New One
+        run: |
+          pod deintegrate
+          pod install
+      
+      - name: Build Cleanup
+        run: |
+          xcodebuild clean -workspace TestPipelines.xcworkspace -scheme TestPipelines | xcpretty
+        
+      - name: Running the Unit Tests
+        run: |
+         echo "Verifying the presence of .xcworkspace file"
+          xcodebuild test -workspace TestPipelines.xcworkspace \
           -scheme TestPipelines \
           -destination 'platform=iOS Simulator,name=iPhone 14' \
-          clean build
-        
-    - name: Running the Unit Tests
-      run: |
-         xcodebuild test -workspace TestPipelines.xcworkspace \
+          CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+
+          else
+            echo ".xcworkspace file not found for testing."
+            exit 1
+          fi
+
+      - name: Archive the App
+        env:
+          BUILD_DIR: "$GITHUB_WORKSPACE/TestPipelines/build"
+          ACTION: "build"
+        run: |
+          xcodebuild archive -workspace TestPipelines.xcworkspace \
             -scheme TestPipelines \
-            -destination 'platform=iOS Simulator,name=iPhone 14' \
-            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+            -configuration Release \
+            -archivePath "$GITHUB_WORKSPACE/TestPipelines.xcarchive" \
+            -destination 'generic/platform=iOS Simulator'
 
-    - name: Archive the App
-      run: |
-        xcodebuild archive -workspace TestPipelines.xcworkspace \
-          -scheme TestPipelines \
-          -configuration Release \
-          -archivePath "$GITHUB_WORKSPACE/TestPipelines.xcarchive" \
-          -destination 'generic/platform=iOS Simulator'
+      - name: Verify archive path
+        run: |
+          if [ -d "$GITHUB_WORKSPACE/TestPipelines.xcarchive" ]; then
+            echo "Archive found!"
+          else
+            echo "Archive not found at expected location."
+            exit 1
+          fi
 
-    - name: Verify archive path
-      run: |
-        if [ -d "$GITHUB_WORKSPACE/TestPipelines.xcarchive" ]; then
-          echo "Archive found!"
-        else
-          echo "Archive not found at expected location."
-          exit 1
-        fi
+      - name: Move archive to repo root
+        run: |
+            mv "/Users/runner/Libr  ary/Developer/Xcode/Archives/$(date +'%Y-%m-%d')/TestPipelines.xcarchive" "$GITHUB_WORKSPACE/"
+  
