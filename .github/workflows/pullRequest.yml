@@ -42,21 +42,16 @@ jobs:
 
       - name: Verify directory and Run Unit Tests
         run: |
-          echo "Verifying the presence of .xcworkspace and .xcodeproj files"
+         echo "Verifying the presence of .xcworkspace file"
 
-          # Check if the xcworkspace or xcodeproj file exists
+          # Check if the xcworkspace file exists
           if [ -f "TestPipelines/TestPipelines.xcworkspace" ]; then
             echo "Found .xcworkspace file, running tests"
             xcodebuild test -workspace TestPipelines/TestPipelines.xcworkspace \
               -scheme TestPipelines \
               -destination 'platform=iOS Simulator,name=iPhone 14' | xcpretty
-          elif [ -f "TestPipelines/TestPipelines.xcodeproj" ]; then
-            echo "Found .xcodeproj file, running tests"
-            xcodebuild test -project TestPipelines/TestPipelines.xcodeproj \
-              -scheme TestPipelines \
-              -destination 'platform=iOS Simulator,name=iPhone 14' | xcpretty
           else
-            echo "Neither .xcworkspace nor .xcodeproj found for testing."
+            echo ".xcworkspace file not found for testing."
             exit 1
           fi
 
