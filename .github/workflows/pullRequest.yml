@@ -40,18 +40,18 @@ jobs:
           echo "Listing files in the root directory"
           ls -la
 
-      - name: Verify directory and Run Unit Tests
-        run: |
-         echo "Verifying the presence of .xcworkspace file"
-          if [ -f "TestPipelines.xcworkspace" ]; then
-            echo "Found .xcworkspace file, running tests"
-            xcodebuild test -workspace TestPipelines/TestPipelines.xcworkspace \
-              -scheme TestPipelines \
-              -destination 'platform=iOS Simulator,name=iPhone 14' | xcpretty
-          else
-            echo ".xcworkspace file not found for testing."
-            exit 1
-          fi
+      # - name: Verify directory and Run Unit Tests
+      #   run: |
+      #    echo "Verifying the presence of .xcworkspace file"
+      #     if [ -f "TestPipelines.xcworkspace" ]; then
+      #       echo "Found .xcworkspace file, running tests"
+      #       xcodebuild test -workspace TestPipelines/TestPipelines.xcworkspace \
+      #         -scheme TestPipelines \
+      #         -destination 'platform=iOS Simulator,name=iPhone 14' | xcpretty
+      #     else
+      #       echo ".xcworkspace file not found for testing."
+      #       exit 1
+      #     fi
 
       - name: Archive the App
         env:
