@@ -46,7 +46,7 @@ jobs:
           ACTION: "build"
         run: |
           cd TestPipelines
-          xcodebuild archive -project TestPipelines.xcodeproj \
+          xcodebuild archive -project TestPipelines.xcworkspace \
             -scheme TestPipelines \
             -configuration Release \
             -archivePath "$GITHUB_WORKSPACE/TestPipelines.xcarchive" \
