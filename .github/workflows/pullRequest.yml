@@ -4,14 +4,10 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
   build:
     runs-on: macos-latest
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -38,36 +34,32 @@ jobs:
           -destination 'platform=iOS Simulator,name=iPhone 14' \
           clean build
         
-    # - name: Verify directory and Run Unit Tests
     - name: Running the Unit Tests
       run: |
-         echo "Verifying the presence of .xcworkspace file"
+        echo "Verifying the presence of .xcworkspace file"
+        if [ -f "$GITHUB_WORKSPACE/TestPipelines.xcworkspace" ]; then
           xcodebuild test -workspace TestPipelines.xcworkspace \
-          -scheme TestPipelines \
-          -destination 'platform=iOS Simulator,name=iPhone 14' \
-          CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
-
-          else
-            echo ".xcworkspace file not found for testing."
-            exit 1
-          fi
+            -scheme TestPipelines \
+            -destination 'platform=iOS Simulator,name=iPhone 14' \
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+        else
+          echo ".xcworkspace file not found for testing."
+          exit 1
+        fi
 
     - name: Archive the App
-      env:
-          BUILD_DIR: "$GITHUB_WORKSPACE/TestPipelines/build"
-          ACTION: "build"
-        run: |
-          xcodebuild archive -workspace TestPipelines.xcworkspace \
-            -scheme TestPipelines \
-            -configuration Release \
-            -archivePath "$GITHUB_WORKSPACE/TestPipelines.xcarchive" \
-            -destination 'generic/platform=iOS Simulator'
+      run: |
+        xcodebuild archive -workspace TestPipelines.xcworkspace \
+          -scheme TestPipelines \
+          -configuration Release \
+          -archivePath "$GITHUB_WORKSPACE/TestPipelines.xcarchive" \
+          -destination 'generic/platform=iOS Simulator'
 
     - name: Verify archive path
       run: |
-          if [ -d "$GITHUB_WORKSPACE/TestPipelines.xcarchive" ]; then
-            echo "Archive found!"
-          else
-            echo "Archive not found at expected location."
-            exit 1
-          fi
+        if [ -d "$GITHUB_WORKSPACE/TestPipelines.xcarchive" ]; then
+          echo "Archive found!"
+        else
+          echo "Archive not found at expected location."
+          exit 1
+        fi
