@@ -1,4 +1,4 @@
-name: TestPipelines
+name: TestPipelines 
 
 on: 
   push:
@@ -13,10 +13,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
+        
       - name: Selecting Xcode Version
         run: sudo xcode-select -switch /Applications/Xcode_15.4.app
-
+        
       - name: Running Xcode Version
         run: /usr/bin/xcodebuild -version
 
@@ -24,36 +24,33 @@ jobs:
         run: |
           sudo gem install cocoapods
           cd TestPipelines
-          pod install --verbose  # This will still install dependencies, even if .xcworkspace is not used
-
+          pod install
+      
       - name: Build Cleanup
         run: |
           cd TestPipelines
-          xcodebuild clean -project TestPipelines.xcodeproj -scheme TestPipelines | xcpretty
-
+          xcodebuild clean -workspace TestPipelines.xcworkspace -scheme TestPipelines | xcpretty
+          
       - name: Run Unit Tests
         run: |
           cd TestPipelines
-          xcodebuild test -project TestPipelines.xcodeproj \
+          xcodebuild test -workspace TestPipelines.xcworkspace \
             -scheme TestPipelines \
             -destination 'platform=iOS Simulator,name=iPhone 14' | xcpretty
-        continue-on-error: false  # Fail the workflow if tests fail
-
+        continue-on-error: false  # Fail the workflow if tests fail     
+          
       - name: Archive the App
-        if: success() # Only run if tests succeeded
         env:
           BUILD_DIR: "$GITHUB_WORKSPACE/TestPipelines/build"
           ACTION: "build"
         run: |
-          cd TestPipelines
-          xcodebuild archive -project TestPipelines.xcworkspace \
+          xcodebuild archive -workspace TestPipelines.xcworkspace \
             -scheme TestPipelines \
             -configuration Release \
             -archivePath "$GITHUB_WORKSPACE/TestPipelines.xcarchive" \
             -destination 'generic/platform=iOS Simulator'
 
       - name: Verify archive path
-        if: success() # Only run if archiving succeeded
         run: |
           if [ -d "$GITHUB_WORKSPACE/TestPipelines.xcarchive" ]; then
             echo "Archive found!"
@@ -61,3 +58,4 @@ jobs:
             echo "Archive not found at expected location."
             exit 1
           fi
+
