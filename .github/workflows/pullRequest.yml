@@ -58,8 +58,3 @@ jobs:
             echo "Archive not found at expected location."
             exit 1
           fi
-
-      - name: Move archive to repo root
-        run: |
-            mv "/Users/runner/Libr  ary/Developer/Xcode/Archives/$(date +'%Y-%m-%d')/TestPipelines.xcarchive" "$GITHUB_WORKSPACE/"
-  
