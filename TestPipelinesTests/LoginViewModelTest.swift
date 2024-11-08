@@ -7,7 +7,7 @@
 
 import Foundation
 import XCTest
-@testable import pip
+@testable import TestPipelines
 
 class LoginViewModelTests: XCTestCase {
     
